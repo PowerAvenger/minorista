@@ -49,68 +49,38 @@ def carga_total_sheets(spreadsheet_id): #sheet_name=None
     data = worksheet.get_all_records()
     df = pd.DataFrame(data)
     df['fecha'] = pd.to_datetime(df['fecha']).dt.date
-    #ultima_fecha_sheets = df_datos_hist.iloc[-1]['fecha']
-    #fecha_actual = (pd.to_datetime("today") + pd.Timedelta(days = 1)).date()
+    
     return df
 
 
 def actualizar_sheets():
-    """Actualiza Google Sheets solo con los nuevos datos."""
-    #SPREADSHEET_ID = '1QVWiORLQGHGFkjUeegxpIdwR6yj2gJr9uj4XZjHhrjU'
-    #worksheet, df_datos_hist = carga_total_sheets(SPREADSHEET_ID)
-    #df_datos_hist['fecha'] = pd.to_datetime(df_datos_hist['fecha']).dt.date
-    #ultima_fecha_sheets = df_datos_hist.iloc[-1]['fecha']
-    
-    fecha_actual = (pd.to_datetime("today") + pd.Timedelta(days = 1)).date()  # Fecha de hoy sin hora
+    #datos a borrar en el sheets
+    fechas_a_borrar = st.session_state.df_sheets['fecha'].unique()[-3:]  # Últimos 3 días
+    filas_a_borrar = st.session_state.df_sheets[st.session_state.df_sheets['fecha'].isin(fechas_a_borrar)].index.tolist()
+    primera_fila = min(filas_a_borrar) + 2  # +2 por índice 1-based y encabezado
+    ultima_fila = max(filas_a_borrar) + 2   # +2 por índice 1-based y encabezado
+    st.session_state.worksheet.delete_rows(primera_fila, ultima_fila)
+    print('filas a borrar')
+    print(filas_a_borrar)
 
-    #print('fecha inicio')
-    #print(ultima_fecha_sheets)
+    #datos nuevos a generar
+    fecha_inicial = (st.session_state.ultima_fecha_sheets - pd.Timedelta(days = 3))  
+    fecha_final = (pd.to_datetime("today") + pd.Timedelta(days = 1)).date()  # Fecha de hoy sin hora
+    df_nuevos_datos = generar_datos(fecha_inicial, fecha_final)
+    nuevos_datos_lista = df_nuevos_datos.astype(str).values.tolist()
+    st.session_state.worksheet.append_rows(nuevos_datos_lista, value_input_option = "RAW")
+
     print('fecha final')
-    print(fecha_actual)
-
-    
-    df_nuevos_datos = generar_datos(st.session_state.ultima_fecha_sheets, fecha_actual)
+    print(fecha_final)
     print('df_nuevos_datos')
     print(df_nuevos_datos)
+    
+    #actualizacion del sheets en memoria
+    st.session_state.df_sheets = pd.concat([st.session_state.df_sheets, df_nuevos_datos], ignore_index=True)
+    st.session_state.df_sheets['fecha'] = pd.to_datetime(st.session_state.df_sheets['fecha']).dt.date
+    st.session_state.ultima_fecha_sheets = st.session_state.df_sheets['fecha'].iloc[-1]
+    mensaje = 'Datos actualizados'
 
-    if not df_nuevos_datos.empty:
-        nuevos_datos_lista = df_nuevos_datos.astype(str).values.tolist()
-        #df_datos_hist['fecha'] = pd.to_datetime(df_datos_hist['fecha']).dt.date
-        #ultimas_fechas = df_datos_hist['fecha'].sort_values(ascending=False).unique()[:2]  # 🔥 Obtener las dos fechas más recientes
-        #filas_a_borrar = df_datos_hist[df_datos_hist['fecha'].isin(ultimas_fechas)].index.tolist()
-
-        filas_a_borrar = st.session_state.df_sheets[st.session_state.df_sheets['fecha'] == st.session_state.ultima_fecha_sheets].index.tolist() #nuevas lineas de codigo
-
-        print('filas a borrar')
-        print(filas_a_borrar)
-
-        #for index in reversed(filas_a_borrar):  # Recorremos en orden inverso para evitar cambios en índices
-        #    st.session_state.worksheet.delete_rows(index + 2)  # Google Sheets usa índices 1-based y el índice 0 es el encabezado
-        if filas_a_borrar:
-            primera_fila = min(filas_a_borrar) + 2  # +2 por índice 1-based y encabezado
-            ultima_fila = max(filas_a_borrar) + 2  # +2 por índice 1-based y encabezado
-            st.session_state.worksheet.delete_rows(primera_fila, ultima_fila)
-
-        st.session_state.worksheet.append_rows(nuevos_datos_lista, value_input_option = "RAW")
-        #st.success(f"Se han añadido {len(nuevos_datos_lista)} nuevas filas a Google Sheets.")
-
-        #df_nuevos_datos = df_nuevos_datos[df_nuevos_datos['fecha'] != ultima_fecha_sheets]
-        # 🔹 4️⃣ Eliminar filas también en `df_datos_hist`
-        #df_datos_hist = df_datos_hist[df_datos_hist['fecha'] != st.session_state.ultima_fecha_sheets]
-        # 🔹 Eliminar las filas también en `df_datos_hist`
-        #df_datos_hist = df_datos_hist[~df_datos_hist['fecha'].isin(ultimas_fechas)]
-        # Combinar el histórico con los nuevos datos
-        st.session_state.df_sheets = pd.concat([st.session_state.df_sheets, df_nuevos_datos], ignore_index=True)
-        st.session_state.df_sheets['fecha'] = pd.to_datetime(st.session_state.df_sheets['fecha']).dt.date
-        st.session_state.ultima_fecha_sheets = st.session_state.df_sheets['fecha'].iloc[-1]
-        mensaje = 'Datos actualizados'
-    else:
-        mensaje = "No hay datos nuevos para actualizar."
-        #df_in = df_datos_hist.copy()
-
-    #df_in['fecha'] = pd.to_datetime(df_in['fecha'])
-    #print('df_in dtypes')
-    #print(df_in.dtypes)
     return mensaje
 
 
@@ -143,8 +113,6 @@ def filtrar_mes():
         lista_meses = df_filtrado_año['mes_nombre'].unique().tolist()
         print('2')
     else:
-        #st.session_state.dia_seleccionado = pd.to_datetime(st.session_state.dia_seleccionado).date()
-        #df_in['fecha'] = pd.to_datetime(df_in['fecha']).dt.date
         df_filtrado = st.session_state.df_sheets[(st.session_state.df_sheets['fecha'] == st.session_state.dia_seleccionado)]
         lista_meses = None
         print('3')
@@ -157,24 +125,11 @@ def filtrar_mes():
 
 
 def aplicar_margen(df_filtrado):
-    
-    #df_filtrado = filtrar_mes()[0]
-    
-    #dffa_copia = df_filtrado.copy()
-    #df_filtrado_final = df_filtrado.copy() #if st.session_state.margen != 0 else df_filtrado
-    #dffa_copia['precio_2.0']=df_filtrado['precio_2.0'] 
-    #dffa_copia['precio_3.0']=df_filtrado['precio_3.0'] 
-    #dffa_copia['precio_6.1']=df_filtrado['precio_6.1'] 
-    #if st.session_state.margen != 0:
     for col in ['precio_2.0','precio_3.0', 'precio_6.1']:
-            df_filtrado[col] += st.session_state.margen
-            #df_filtrado_final[col] += st.session_state.margen
+        df_filtrado[col] += st.session_state.margen
     
-    #dffa_copia['precio_2.0']+=st.session_state.margen
-    #dffa_copia['precio_3.0']+=st.session_state.margen
-    #dffa_copia['precio_6.1']+=st.session_state.margen
 
-    return df_filtrado #_final
+    return df_filtrado
 
 
 def pt1(df_filtrado):
