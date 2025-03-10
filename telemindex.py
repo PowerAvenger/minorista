@@ -1,5 +1,5 @@
 import streamlit as st
-from backend import (filtrar_mes, aplicar_margen, pt1_trans, graf_principal, pt5_trans, pt1, pt7_trans, costes_indexado, 
+from backend import (filtrar_mes, aplicar_margen, graf_principal, pt5_trans, pt1, pt7_trans, costes_indexado, 
     autenticar_google_sheets, carga_rapida_sheets, carga_total_sheets, actualizar_sheets
 )
 import pandas as pd
@@ -101,7 +101,7 @@ with st.sidebar.container():
     if st.sidebar.button('Actualizar registros'):
         mensaje = actualizar_sheets()
         zona_mensajes.warning(mensaje)
-
+        zona_fechas.write(f'Última fecha disponible: {st.session_state.ultima_fecha_sheets}')
 
 
 
