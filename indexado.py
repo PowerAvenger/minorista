@@ -1,4 +1,3 @@
-# %%
 import requests
 import pandas as pd
 import streamlit as st
@@ -6,7 +5,6 @@ import zipfile
 import io
 import os
 
-# %%
 # descarga de un id (específicamente id600 con filtrado geo_ids=3)
 def download_esios_id(id, fecha_ini, fecha_fin, agrupacion):
                        

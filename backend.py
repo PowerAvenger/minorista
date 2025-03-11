@@ -8,9 +8,11 @@ from indexado import generar_datos
 def autenticar_google_sheets():
     # Rutas y configuraciones
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    CREDENTIALS_FILE = 'spo25-442409-8a519cc5fd96.json'  
+    #CREDENTIALS_FILE = 'spo25-442409-8a519cc5fd96.json'  
+    CREDENTIALS_INFO = st.secrets['GOOGLE_SHEETS_CREDENTIALS'] 
     # Autenticación
-    credentials = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
+    #credentials = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
+    credentials = Credentials.from_service_account_info(CREDENTIALS_INFO, scopes=SCOPES)
     st.session_state.client = gspread.authorize(credentials)
     return st.session_state.client
 
