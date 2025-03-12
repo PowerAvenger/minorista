@@ -92,16 +92,17 @@ with st.sidebar.container():
 #    st.session_state.margen = 0
     
 #no usado
-actualizar = False
+
 with st.sidebar.container():
     zona_mensajes = st.sidebar.empty()
     zona_fechas = st.sidebar.empty()
     zona_fechas.write(f'Última fecha disponible: {st.session_state.ultima_fecha_sheets}')
-
-    if st.sidebar.button('Actualizar registros', disabled=True):
-        mensaje = actualizar_sheets()
-        zona_mensajes.warning(mensaje)
-        zona_fechas.write(f'Última fecha disponible: {st.session_state.ultima_fecha_sheets}')
+    actualizar = False
+    if actualizar:
+        if st.sidebar.button('Actualizar registros'):
+            mensaje = actualizar_sheets()
+            zona_mensajes.warning(mensaje)
+            zona_fechas.write(f'Última fecha disponible: {st.session_state.ultima_fecha_sheets}')
 
 
 
