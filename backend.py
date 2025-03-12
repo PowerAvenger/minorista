@@ -56,6 +56,13 @@ def carga_total_sheets(spreadsheet_id): #sheet_name=None
 
 
 def actualizar_sheets():
+
+    #datos nuevos a generar
+    fecha_inicial = (st.session_state.ultima_fecha_sheets - pd.Timedelta(days = 3))  
+    fecha_final = (pd.to_datetime("today") + pd.Timedelta(days = 1)).date()  # Fecha de hoy sin hora
+    df_nuevos_datos = generar_datos(fecha_inicial, fecha_final)
+    nuevos_datos_lista = df_nuevos_datos.astype(str).values.tolist()
+    
     #datos a borrar en el sheets
     fechas_a_borrar = st.session_state.df_sheets['fecha'].unique()[-3:]  # Últimos 3 días
     filas_a_borrar = st.session_state.df_sheets[st.session_state.df_sheets['fecha'].isin(fechas_a_borrar)].index.tolist()
@@ -65,11 +72,7 @@ def actualizar_sheets():
     print('filas a borrar')
     print(filas_a_borrar)
 
-    #datos nuevos a generar
-    fecha_inicial = (st.session_state.ultima_fecha_sheets - pd.Timedelta(days = 3))  
-    fecha_final = (pd.to_datetime("today") + pd.Timedelta(days = 1)).date()  # Fecha de hoy sin hora
-    df_nuevos_datos = generar_datos(fecha_inicial, fecha_final)
-    nuevos_datos_lista = df_nuevos_datos.astype(str).values.tolist()
+    
     st.session_state.worksheet.append_rows(nuevos_datos_lista, value_input_option = "RAW")
 
     print('fecha final')
