@@ -238,8 +238,8 @@ def graf_principal(df_filtrado):
    
     graf_pt1.update_layout(
         margin=dict(t=100),
-        title_font_size=16,
-        title={'x':.5,'xanchor':'center'},
+        #title_font_size=16,
+        #title={'x':.5,'xanchor':'center'},
         xaxis=dict(
               tickmode='array',
               tickvals=pt2['hora']
