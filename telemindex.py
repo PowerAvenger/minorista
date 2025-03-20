@@ -1,5 +1,5 @@
 import streamlit as st
-from backend import (filtrar_mes, aplicar_margen, graf_principal, pt5_trans, pt1, pt7_trans, costes_indexado, 
+from backend import (filtrar_datos, aplicar_margen, graf_principal, pt5_trans, pt1, pt7_trans, costes_indexado, 
     autenticar_google_sheets, carga_rapida_sheets, carga_total_sheets, actualizar_sheets
 )
 import pandas as pd
@@ -47,7 +47,8 @@ columnas_numericas = st.session_state.df_sheets.columns.difference(['fecha', 'me
 st.session_state.df_sheets[columnas_numericas] = st.session_state.df_sheets[columnas_numericas].apply(pd.to_numeric, errors='coerce')
 
 
-df_filtrado, lista_meses = filtrar_mes()
+df_filtrado, lista_meses = filtrar_datos()
+fecha_ultima_filtrado = df_filtrado['fecha'].iloc[-1]
 
 #ejecutamos la función para obtener la tabla resumen y precios medios
 tabla_precios, media_20, media_30, media_61, media_spot, media_ssaa = pt5_trans(df_filtrado)
@@ -73,7 +74,7 @@ with st.sidebar.container(border=True):
 
     if st.session_state.rango_temporal == 'Por años':
         st.sidebar.selectbox('Seleccione el año', options = [2025, 2024, 2023], key = 'año_seleccionado') 
-        st.session_state.texto_precios = f'Año {st.session_state.año_seleccionado}, hasta el día {st.session_state.ultima_fecha_sheets}'
+        st.session_state.texto_precios = f'Año {st.session_state.año_seleccionado}, hasta el día {fecha_ultima_filtrado}'
     elif st.session_state.rango_temporal =='Por meses' : 
         col_sb1, col_sb2 = st.sidebar.container().columns(2)      
         with col_sb1:
@@ -123,7 +124,7 @@ st.markdown(f"Visita mi página de [ePowerAPPs]({url_apps}). Deja tus comentario
 
 zona_grafica = st.empty()
 
-
+# ZONA PRINCIPAL DE GRÁFICOS++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 with zona_grafica.container():
 
     col1, col2 = st.columns([.7,.3])

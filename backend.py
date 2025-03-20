@@ -105,7 +105,7 @@ orden_meses = {
     'diciembre': 12
 }
 
-def filtrar_mes():
+def filtrar_datos():
    
     if st.session_state.rango_temporal == 'Por años': 
         df_filtrado =st.session_state.df_sheets[st.session_state.df_sheets['año'] == st.session_state.año_seleccionado]
