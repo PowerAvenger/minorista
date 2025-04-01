@@ -171,6 +171,6 @@ with zona_grafica.container():
 
 if 'df_sheets_full' not in st.session_state:
     zona_mensajes.warning('Cargados datos iniciales. Espera a que estén disponibles todos los datos', icon = '⚠️')
-    st.session_state.df_sheets_full = carga_total_sheets(SPREADSHEET_ID)
+    st.session_state.df_sheets_full = carga_total_sheets()
     st.session_state.df_sheets = st.session_state.df_sheets_full
     zona_mensajes.success('Cargados todos los datos. Ya puedes consultar los históricos', icon = '👍')

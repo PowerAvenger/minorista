@@ -43,7 +43,7 @@ with c2:
 
     st.text('')
     st.text('')
-    st.info('¡Bienvenido a **Indexados** :orange[e]PowerAPP! \n\n'
+    st.info('¡Bienvenido a la :orange[e]PowerAPP** del mercado minorista de la electricidad**! \n\n'
             'Presente, pasado y futuro de los precios de indexados minoristas.\n'
             'No dudes en contactar para comentar errores detectados o proponer mejoras en la :orange[e]PowerAPP'
             ,icon="ℹ️")

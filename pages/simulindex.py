@@ -6,15 +6,15 @@ from backend_comun import carga_rapida_sheets, carga_total_sheets
 from utilidades import generar_menu
 
 # CONSTANTES
-SPREADSHEET_ID = st.secrets['SPREADSHEET_ID']
+#SPREADSHEET_ID = st.secrets['SPREADSHEET_ID']
 
 generar_menu()
 
 
 if 'client' not in st.session_state:
     st.session_state.client = autenticar_google_sheets()
-if 'ultima_fecha_sheets' not in st.session_state:
-    carga_rapida_sheets(SPREADSHEET_ID)
+#if 'ultima_fecha_sheets' not in st.session_state:
+#    carga_rapida_sheets()
 
 df_historicos_FTB, ultimo_registro = obtener_historicos()
 df_FTB_trimestral_filtrado, fecha_ultimo_omip, media_omip_calc = obtener_meff_trimestral(df_historicos_FTB)
@@ -123,8 +123,4 @@ with col4:
     st.write(graf_omip_trim)
 
 
-if 'df_sheets_full' not in st.session_state:
-    zona_mensajes.warning('Cargados datos iniciales. Espera a que estén disponibles todos los datos', icon = '⚠️')
-    st.session_state.df_sheets_full = carga_total_sheets(SPREADSHEET_ID)
-    st.session_state.df_sheets = st.session_state.df_sheets_full
-    zona_mensajes.success('Cargados todos los datos. Ya puedes consultar los históricos', icon = '👍')
+

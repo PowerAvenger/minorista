@@ -9,6 +9,7 @@ from datetime import datetime
 
 
 #ESTE CÓDIGO ES PARA ACCEDER A LOS DIFERENTES SHEETS
+#sólo lo usamos para meff
 def acceder_google_sheets(spreadsheet_id): #sheet_name=None
     sheet = st.session_state.client.open_by_key(spreadsheet_id)
     # Primera hoja por defecto
@@ -21,7 +22,7 @@ def acceder_google_sheets(spreadsheet_id): #sheet_name=None
 @st.cache_data()
 def obtener_historicos():
     #ID hoja de registro de usuarios
-    SPREADSHEET_ID = st.secrets['MEFF_ID']
+    SPREADSHEET_ID = st.secrets['SHEET_MEFF_ID']
     worksheet_meff, df_historicos_FTB = acceder_google_sheets(SPREADSHEET_ID)
     
     df_historicos_FTB['Fecha']=pd.to_datetime(df_historicos_FTB['Fecha'], format='%Y-%m-%d')

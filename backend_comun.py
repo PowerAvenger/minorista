@@ -8,6 +8,9 @@ def autenticar_google_sheets():
     # Rutas y configuraciones
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
     CREDENTIALS_INFO = st.secrets['GOOGLE_SHEETS_CREDENTIALS'] 
+    #CREDENTIALS_INFO = dict(st.secrets['GOOGLE_SHEETS_CREDENTIALS'])
+    #CREDENTIALS_INFO["private_key"] = CREDENTIALS_INFO["private_key"].replace("\\n", "\n")
+    
     # Autenticación
     #credentials = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
     credentials = Credentials.from_service_account_info(CREDENTIALS_INFO, scopes=SCOPES)
@@ -42,9 +45,10 @@ def carga_rapida_sheets():
 
 
 #ESTE CÓDIGO ES PARA ACCEDER AL SHEETS COMPLETO
-def carga_total_sheets(spreadsheet_id): #sheet_name=None
-    sheet = st.session_state.client.open_by_key(spreadsheet_id)
-    # Primera hoja por defecto
+def carga_total_sheets(): #sheet_name=None
+    SPREADSHEET_ID = st.secrets['SHEET_INDEX_ID']
+    sheet = st.session_state.client.open_by_key(SPREADSHEET_ID)
+    # Primera hoja por defecto  
     worksheet = sheet.sheet1  
     # Obtener los datos como DataFrame
     data = worksheet.get_all_records()

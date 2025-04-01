@@ -7,7 +7,7 @@ import streamlit as st
 def filtrar_datos():
    
     if st.session_state.rango_temporal == 'Por años': 
-        df_filtrado =st.session_state.df_sheets[st.session_state.df_sheets['año'] == st.session_state.año_seleccionado]
+        df_filtrado = st.session_state.df_sheets[st.session_state.df_sheets['año'] == st.session_state.año_seleccionado]
         lista_meses = df_filtrado['mes_nombre'].unique().tolist()
         print('1')
     elif st.session_state.rango_temporal == 'Por meses': 
@@ -21,7 +21,12 @@ def filtrar_datos():
         df_filtrado = st.session_state.df_sheets[(st.session_state.df_sheets['fecha'] == st.session_state.dia_seleccionado)]
         lista_meses = None
         print('3')
-     
+
+    print('dia seleccionado')
+    print(st.session_state.dia_seleccionado)
+    print('st session df sheets')
+    print(st.session_state.df_sheets)
+
     print ('df_filtrado')
     print (df_filtrado)
              
