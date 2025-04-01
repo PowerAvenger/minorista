@@ -1,2 +1,1 @@
-# telemindex
-Precios de indexado del mercado minorista de electricidad
+ePowerAPP minorista del mercado eléctrico
