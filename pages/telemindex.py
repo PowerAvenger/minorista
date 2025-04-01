@@ -8,8 +8,7 @@ import datetime
 from utilidades import generar_menu
 
 
-# CONSTANTES
-SPREADSHEET_ID = st.secrets['SPREADSHEET_ID']
+
 
 # INICIALIZAMOS VARIABLES
 if 'client' not in st.session_state:
@@ -21,7 +20,7 @@ if 'año_seleccionado' not in st.session_state:
 if 'mes_seleccionado' not in st.session_state: 
     st.session_state.mes_seleccionado = 'enero'
 if 'ultima_fecha_sheets' not in st.session_state or 'df_sheets' not in st.session_state:
-    carga_rapida_sheets(SPREADSHEET_ID)
+    carga_rapida_sheets()
 if 'dia_seleccionado' not in st.session_state:
     st.session_state.dia_seleccionado = st.session_state.ultima_fecha_sheets
 if 'texto_precios' not in st.session_state:

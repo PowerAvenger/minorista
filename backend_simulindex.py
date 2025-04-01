@@ -21,8 +21,8 @@ def acceder_google_sheets(spreadsheet_id): #sheet_name=None
 @st.cache_data()
 def obtener_historicos():
     #ID hoja de registro de usuarios
-    spreadsheet_id_users = '1VELR6AaajSeHYbv6QSgDXBWkCNv0z-uzVa5jAk57i4I'
-    worksheet_meff, df_historicos_FTB = acceder_google_sheets(spreadsheet_id_users)
+    SPREADSHEET_ID = st.secrets['MEFF_ID']
+    worksheet_meff, df_historicos_FTB = acceder_google_sheets(SPREADSHEET_ID)
     
     df_historicos_FTB['Fecha']=pd.to_datetime(df_historicos_FTB['Fecha'], format='%Y-%m-%d')
     # obtenemos la fecha del último registro

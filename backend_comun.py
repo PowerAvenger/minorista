@@ -7,7 +7,6 @@ from google.oauth2.service_account import Credentials
 def autenticar_google_sheets():
     # Rutas y configuraciones
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    #CREDENTIALS_FILE = 'spo25-442409-8a519cc5fd96.json'  
     CREDENTIALS_INFO = st.secrets['GOOGLE_SHEETS_CREDENTIALS'] 
     # Autenticación
     #credentials = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
@@ -16,9 +15,10 @@ def autenticar_google_sheets():
     return st.session_state.client
 
 
-def carga_rapida_sheets(SPREADSHEET_ID):
+def carga_rapida_sheets():
     """Obtiene la última fecha registrada en Google Sheets en formato 'YYYY-MM-DD' de la forma más rápida posible."""
-    
+    # CONSTANTES
+    SPREADSHEET_ID = st.secrets['SHEET_INDEX_ID']
     sheet = st.session_state.client.open_by_key(SPREADSHEET_ID)
     worksheet = sheet.sheet1
     # 🔹 Leer solo la columna de fechas (columna A)
