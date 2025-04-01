@@ -1,24 +1,11 @@
 import streamlit as st
-from backend import (filtrar_datos, aplicar_margen, graf_principal, pt5_trans, pt1, pt7_trans, costes_indexado, 
-    autenticar_google_sheets, carga_rapida_sheets, carga_total_sheets, actualizar_sheets
-)
+from backend_telemindex import filtrar_datos, aplicar_margen, graf_principal, pt5_trans, pt1, pt7_trans, costes_indexado 
+from backend_comun import autenticar_google_sheets, carga_rapida_sheets, carga_total_sheets
+
 import pandas as pd
 import datetime
 
-
-st.set_page_config(
-    page_title="Telemindex",
-    page_icon=":bulb:",
-    layout='wide',
-    menu_items={
-        'Get help':'https://www.linkedin.com/in/jfvidalsierra/',
-        'About':'https://www.linkedin.com/in/jfvidalsierra/'
-        }
-    )
-
-#if "cache_cleared" not in st.session_state:
-#    st.cache_data.clear()  # Limpiar caché al iniciar
-#    st.session_state.cache_cleared = True  # Evita que se borre en cada interacción
+from utilidades import generar_menu
 
 
 # CONSTANTES
@@ -33,7 +20,7 @@ if 'año_seleccionado' not in st.session_state:
     st.session_state.año_seleccionado = 2025
 if 'mes_seleccionado' not in st.session_state: 
     st.session_state.mes_seleccionado = 'enero'
-if 'ultima_fecha_sheets' not in st.session_state:
+if 'ultima_fecha_sheets' not in st.session_state or 'df_sheets' not in st.session_state:
     carga_rapida_sheets(SPREADSHEET_ID)
 if 'dia_seleccionado' not in st.session_state:
     st.session_state.dia_seleccionado = st.session_state.ultima_fecha_sheets
@@ -64,9 +51,12 @@ sobrecoste_ssaa = ((media_combo / media_spot) - 1) * 100
 tabla_atr = pt7_trans(df_filtrado)
 tabla_costes = costes_indexado(df_filtrado)
 
-
+generar_menu()
 
 #ELEMENTOS DE LA BARRA LATERAL ---------------------------------------------------------------------------------------
+
+st.sidebar.header('', divider='rainbow')
+st.sidebar.header('Histórico de indexados')
 
 st.sidebar.subheader('Opciones')
 with st.sidebar.container(border=True):
@@ -91,34 +81,21 @@ with st.sidebar.container():
     st.sidebar.caption(f'Se ha añadido {st.session_state.margen} €/MWh')
 #else:
 #    st.session_state.margen = 0
-    
-#no usado
+zona_mensajes = st.sidebar.empty()        
 
-with st.sidebar.container():
-    zona_mensajes = st.sidebar.empty()
-    zona_fechas = st.sidebar.empty()
-    zona_fechas.write(f'Última fecha disponible: {st.session_state.ultima_fecha_sheets}')
-    actualizar = False
-    if actualizar:
-        if st.sidebar.button('Actualizar registros'):
-            mensaje = actualizar_sheets()
-            zona_mensajes.warning(mensaje)
-            zona_fechas.write(f'Última fecha disponible: {st.session_state.ultima_fecha_sheets}')
-
-
-
+st.sidebar.write(f'Última fecha disponible: {st.session_state.ultima_fecha_sheets}')
 #ELEMENTOS DE LA BARRA LATERAL ---------------------------------------------------------------------------------------
 
 
 ## LAYOUT DE LA PÁGINA PRINCIPAL+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-st.title("Telemindex 2023-2025 :orange[e]PowerAPP©")
-st.caption("Tu aplicación para saber los precios minoristas de indexado. Copyright by Jose Vidal :ok_hand:")
+#st.title("Telemindex 2023-2025 :orange[e]PowerAPP©")
+#st.caption("Tu aplicación para saber los precios minoristas de indexado. Copyright by Jose Vidal :ok_hand:")
 #st.caption("Copyright by Jose Vidal :ok_hand:")
-url_apps = "https://powerappspy-josevidal.streamlit.app/"
-url_linkedin = "https://www.linkedin.com/posts/josefvidalsierra_epowerapps-spo2425-telemindex-activity-7281942697399967744-IpFK?utm_source=share&utm_medium=member_deskto"
-url_bluesky = "https://bsky.app/profile/poweravenger.bsky.social"
+#url_apps = "https://powerappspy-josevidal.streamlit.app/"
+#url_linkedin = "https://www.linkedin.com/posts/josefvidalsierra_epowerapps-spo2425-telemindex-activity-7281942697399967744-IpFK?utm_source=share&utm_medium=member_deskto"
+#url_bluesky = "https://bsky.app/profile/poweravenger.bsky.social"
 #st.write("Visita mi página de [ePowerAPPs](%s) con un montón de utilidades" % url_apps)
-st.markdown(f"Visita mi página de [ePowerAPPs]({url_apps}). Deja tus comentarios y propuestas en mi perfil de [Linkedin]({url_linkedin}) - ¡Sígueme en [Bluesky]({url_bluesky})!")
+#st.markdown(f"Visita mi página de [ePowerAPPs]({url_apps}). Deja tus comentarios y propuestas en mi perfil de [Linkedin]({url_linkedin}) - ¡Sígueme en [Bluesky]({url_bluesky})!")
 
 # Cargamos datos
 
@@ -195,7 +172,6 @@ with zona_grafica.container():
 
 if 'df_sheets_full' not in st.session_state:
     zona_mensajes.warning('Cargados datos iniciales. Espera a que estén disponibles todos los datos', icon = '⚠️')
-    #st.session_state.df_sheets_full = actualizar_sheets(SPREADSHEET_ID, actualizar)
     st.session_state.df_sheets_full = carga_total_sheets(SPREADSHEET_ID)
     st.session_state.df_sheets = st.session_state.df_sheets_full
     zona_mensajes.success('Cargados todos los datos. Ya puedes consultar los históricos', icon = '👍')
