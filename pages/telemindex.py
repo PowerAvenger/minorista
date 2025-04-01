@@ -34,7 +34,11 @@ st.session_state.df_sheets[columnas_numericas] = st.session_state.df_sheets[colu
 
 
 df_filtrado, lista_meses = filtrar_datos()
-fecha_ultima_filtrado = df_filtrado['fecha'].iloc[-1]
+try:
+    fecha_ultima_filtrado = df_filtrado['fecha'].iloc[-1]
+except:
+    st.session_state.dia_seleccionado = '2025-01-01'
+    df_filtrado, lista_meses = filtrar_datos()
 
 #ejecutamos la función para obtener la tabla resumen y precios medios
 tabla_precios, media_20, media_30, media_61, media_spot, media_ssaa = pt5_trans(df_filtrado)
