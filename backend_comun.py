@@ -4,6 +4,8 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 
+colores_precios = {'precio_2.0': 'goldenrod', 'precio_3.0': 'darkred', 'precio_6.1': '#1C83E1'}
+
 def autenticar_google_sheets():
     # Rutas y configuraciones
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']

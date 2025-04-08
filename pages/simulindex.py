@@ -1,7 +1,7 @@
 import streamlit as st
 from backend_comun import autenticar_google_sheets
 from backend_simulindex import obtener_historicos, obtener_meff_trimestral, obtener_grafico_meff, hist_mensual, graf_hist
-from backend_comun import carga_rapida_sheets, carga_total_sheets
+from backend_comun import carga_rapida_sheets, carga_total_sheets, colores_precios
 
 from utilidades import generar_menu
 
@@ -27,7 +27,7 @@ def reset_slider():
 
 #df_hist = leer_excel()
 df_hist = hist_mensual()
-grafico, simul20, simul30, simul61 = graf_hist(df_hist, st.session_state.omip_slider)
+grafico, simul20, simul30, simul61 = graf_hist(df_hist, st.session_state.omip_slider, colores_precios)
 # a los precios simulados resultantes le incrementamos el coste medio de los pyc 2025
 simul20 = round(simul20 + 0.38, 2)
 simul30 = round(simul30 + 0.18, 2)

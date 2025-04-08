@@ -53,7 +53,8 @@ with c2:
     if acceso_telemindex:
         st.switch_page('pages/telemindex.py')
     #if acceso_simulindex:
-    #    st.switch_page('pages/simulindex.py')
+    #   st.switch_page('pages/simulindex.py')
+    # bla
     
 
 

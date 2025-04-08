@@ -1,11 +1,12 @@
 import streamlit as st
 from backend_telemindex import filtrar_datos, aplicar_margen, graf_principal, pt5_trans, pt1, pt7_trans, costes_indexado 
-from backend_comun import autenticar_google_sheets, carga_rapida_sheets, carga_total_sheets
+from backend_comun import autenticar_google_sheets, carga_rapida_sheets, carga_total_sheets, colores_precios
 
 import pandas as pd
 import datetime
 
 from utilidades import generar_menu
+
 
 
 
@@ -127,7 +128,7 @@ with zona_grafica.container():
                 st.metric('Precio medio SSAA €/MWh', value = media_ssaa, delta = f'{sobrecoste_ssaa:,.1f}%', delta_color = 'inverse', help= 'Se indica su valor medio y en qué % aumenta el precio medio Spot')
         st.empty()
         # gráfico principal de barras y lineas precios medios y omie+ssaa
-        st.plotly_chart(graf_principal(df_filtrado))
+        st.plotly_chart(graf_principal(df_filtrado, colores_precios))
         st.empty()
         st.subheader("Peso de los componentes por peaje de acceso", divider='rainbow')
         _, graf20, graf30, graf61 = pt1(df_filtrado)

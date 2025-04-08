@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+from backend_comun import colores_precios
 
 
 
@@ -130,11 +131,11 @@ def pt1_trans(df_filtrado):
     return pt1_trans
 
 # GRAFICO PRINCIPAL CON LAS BARRAS DE OMIE Y SSAA Y LAS LINEAS DE PRECIO FINAL. HORARIAS
-def graf_principal(df_filtrado):
+def graf_principal(df_filtrado, colores_precios):
     pt2 = pt1(df_filtrado)[0]
     print('pt2')
     print(pt2)
-    colores_precios = {'precio_2.0': 'goldenrod', 'precio_3.0': 'darkred', 'precio_6.1': 'blue'}
+    #colores_precios = {'precio_2.0': 'goldenrod', 'precio_3.0': 'darkred', 'precio_6.1': '#1C83E1'}
     graf_pt1=px.line(pt2,x='hora',y=['precio_2.0','precio_3.0','precio_6.1'],
         height=600,
         #title=f'Telemindex {st.session_state.año_seleccionado}: Precios medios horarios de indexado según tarifas de acceso',
@@ -151,7 +152,8 @@ def graf_principal(df_filtrado):
               tickmode='array',
               tickvals=pt2['hora']
         ),
-        barmode = 'stack'
+        #barmode = 'stack'
+        barmode = 'relative'
     )
     graf_pt1 = graf_pt1.add_bar(y = pt2['spot'], name = 'spot', marker_color = 'green', width = 0.5)
     graf_pt1 = graf_pt1.add_bar(y = pt2['ssaa'], name = 'ssaa', marker_color = 'lightgreen', width = 0.5)

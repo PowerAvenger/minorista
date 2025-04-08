@@ -3,6 +3,7 @@ import plotly.express as px
 
 import streamlit as st
 from datetime import datetime
+from backend_comun import colores_precios
 
 
 
@@ -128,14 +129,16 @@ def hist_mensual():
     return df_hist
 
 # creamos un gráfico principal con el parámetro 'omip'
-def graf_hist(df_hist, omip):
-    colores_precios = {'precio_2.0': 'goldenrod', 'precio_3.0': 'darkred', 'precio_6.1': 'cyan'}
+def graf_hist(df_hist, omip, colores_precios):
+    #colores_precios = {'precio_2.0': 'goldenrod', 'precio_3.0': 'darkred', 'precio_6.1': 'cyan'}
     graf_hist = px.scatter(df_hist, x = 'spot', y = ['precio_2.0','precio_3.0','precio_6.1'], trendline = 'ols',
         labels = {'value':'Precio medio de indexado en c€/kWh','variable':'Precios según ATR','spot':'Precio medio mercado mayorista en €/MWh'},
         height = 600,
         color_discrete_map = colores_precios,
         title = 'Simulación de los precios medios de indexado',
+        
     )
+    graf_hist.update_traces(marker=dict(symbol='square'))
     
     trend_results = px.get_trendline_results(graf_hist)
     print ('trend_results')
@@ -157,17 +160,17 @@ def graf_hist(df_hist, omip):
     simul_61=round(intercept_61+slope_61*omip,1)
 
     graf_hist.add_scatter(x=[omip],y=[simul_20], mode='markers', 
-        marker=dict(color='rgba(255, 255, 255, 0)',size=20, line=dict(width=5, color='goldenrod')),
+        marker=dict(color='rgba(255, 255, 255, 0)',size=20, line=dict(width=5, color=colores_precios['precio_2.0'])),
         name='Simul 2.0',
         text='Simul 2.0'
     )
     graf_hist.add_scatter(x=[omip],y=[simul_30], mode='markers', 
-        marker=dict(color='rgba(255, 255, 255, 0)',size=20, line=dict(width=5, color='darkred')),
+        marker=dict(color='rgba(255, 255, 255, 0)',size=20, line=dict(width=5, color=colores_precios['precio_3.0'])),
         name='Simul 3.0',
         text='Simul 3.0'
     )
     graf_hist.add_scatter(x=[omip],y=[simul_61], mode='markers', 
-        marker=dict(color='rgba(255, 255, 255, 0)',size=20, line=dict(width=5, color='cyan')),
+        marker=dict(color='rgba(255, 255, 255, 0)',size=20, line=dict(width=5, color=colores_precios['precio_6.1'])),
         name='Simul 6.1',
         text='Simul 6.1'
     )
